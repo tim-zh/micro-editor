@@ -130,6 +130,8 @@ microEditor = function(element, buttonContainer, options) {
 					options.customPreviewReplaces.forEach(function(rule) {
 						text = text.replace(rule[0], rule[1])});
 				previewContainer.innerHTML = text;
+				if (options.onPreview)
+					options.onPreview(previewContainer);
 			}
 			element.style.display = isPreview ? 'none' : elementDisplay;
 			previewContainer.style.display = isPreview ? 'block' : 'none';
