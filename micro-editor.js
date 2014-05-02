@@ -17,9 +17,7 @@ microEditor = function(element, buttonContainer, options) {
 		buttonElement: 'button',
 		buttonClassName: 'microEditor-button',
 		buttons: 'bold,italic,underline,strike,size,link,image,quote,list,code,center,paragraph,preview',
-		previewReplaces: 'newLine,bold,italic,underline,strike,size,link,link2,image,image2,quote,list,code,center,paragraph',
-		customButtons: [],
-		customPreviewReplaces: []
+		previewReplaces: 'newLine,bold,italic,underline,strike,size,link,link2,image,image2,quote,list,code,center,paragraph'
 	};
 	var defaultButtons = {
 		bold: ['<b>b</b>', '[b]', '[/b]'],
@@ -99,14 +97,15 @@ microEditor = function(element, buttonContainer, options) {
 		buttonContainer.appendChild(btn);
 	};
 
-	defaultOptions.buttons.split(',').filter(function(e) {return defaultButtons[e]}).forEach(function (btn) {
-		addButton('microEditor' + btn, defaultButtons[btn][0], defaultButtons[btn][1], defaultButtons[btn][2], '',
-			defaultButtons[btn][3])
+	defaultOptions.buttons.split(',').forEach(function (btn) {
+		if (defaultButtons[btn])
+			addButton('microEditor' + btn, defaultButtons[btn][0], defaultButtons[btn][1], defaultButtons[btn][2], '',
+				defaultButtons[btn][3]);
+		else if (options.customButtons[btn]) {
+			var b = options.customButtons[btn];
+			addButton('microEditor' + btn, b[0], b[1], b[2], b[3], b[4]);
+		}
 	});
-	if (options.customButtons)
-		options.customButtons.forEach(function(btn) {
-			addButton(btn[0], btn[1], btn[2], btn[3], btn[4], btn[5]);
-		});
 
 	if (defaultOptions.buttons.indexOf('preview') >= 0) {
 		var btn = document.createElement(defaultOptions.buttonElement);
