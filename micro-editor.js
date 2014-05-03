@@ -17,7 +17,7 @@ microEditor = function(element, buttonContainer, options) {
 		buttonElement: 'button',
 		buttonClassName: 'microEditor-button',
 		buttons: 'bold,italic,underline,strike,size,link,image,quote,list,code,center,paragraph,preview',
-		previewReplaces: 'newLine,bold,italic,underline,strike,size,link,link2,image,image2,quote,list,code,center,paragraph'
+		previewReplacements: 'newLine,bold,italic,underline,strike,size,link,link2,image,image2,quote,list,code,center,paragraph'
 	};
 	var defaultButtons = {
 		bold: ['<b>b</b>', '[b]', '[/b]'],
@@ -51,7 +51,7 @@ microEditor = function(element, buttonContainer, options) {
 		center: ['center', '[center]', '[/center]'],
 		paragraph: ['¶', '[p]', '[/p]']
 	};
-	var defaultPreviewReplaces = {
+	var previewReplacements = {
 		newLine: [/(\r\n|\r|\n|\n\r)/g, '<br/>'],
 		bold: [/\[b\]([\s\S]+?)\[\/b\]/g, '<strong>$1</strong>'],
 		italic: [/\[i\]([\s\S]+?)\[\/i\]/g, '<i>$1</i>'],
@@ -124,10 +124,10 @@ microEditor = function(element, buttonContainer, options) {
 			isPreview = !isPreview;
 			if (isPreview) {
 				var text = element.value;
-				defaultOptions.previewReplaces.split(',').filter(function(e) {return defaultPreviewReplaces[e]}).
-					forEach(function(rule) {text = text.replace(defaultPreviewReplaces[rule][0], defaultPreviewReplaces[rule][1])});
-				if (options.customPreviewReplaces)
-					options.customPreviewReplaces.forEach(function(rule) {
+				defaultOptions.previewReplacements.split(',').filter(function(e) {return previewReplacements[e]}).
+					forEach(function(rule) {text = text.replace(previewReplacements[rule][0], previewReplacements[rule][1])});
+				if (options.customReplacements)
+					options.customReplacements.forEach(function(rule) {
 						text = text.replace(rule[0], rule[1])});
 				previewContainer.innerHTML = text;
 				if (options.onPreview)
