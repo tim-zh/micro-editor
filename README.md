@@ -21,14 +21,19 @@ microEditor(document.getElementById('textHere'), document.getElementById('button
 	//default classes for buttons
 	buttonClassName: 'microEditor-button',
 
-	//list of button (provided and custom) names appended to buttonContainer. provided buttons use bbCode
-	buttons: 'bold,italic,underline,strike,size,link,image,quote,list,code,center,paragraph,preview' +
+	//default classes for button groups
+	buttonGroupClassName: 'microEditor-buttonGroup',
+
+	//list of button (provided and custom) names appended to buttonContainer.
+	// | sign splits buttons into groups.
+	//provided buttons use bbCode
+	buttons: 'bold,italic,underline,strike,size|link,image|quote,list,code|center,paragraph|preview' +
 		//custom buttons, see below
 		',hello1,hello2',
 
 	//list of rule names that convert text to html to see in preview
-	previewReplacements: 'newLine,bold,italic,underline,strike,size,link,link2,image,image2,quote,list,' +
-		'code,center,paragraph',
+	previewReplacements: 'newLine,bold,italic,underline,strike,size,link,link2,image,image2,quote,' +
+		'list,code,center,paragraph',
 
 	//custom buttons
 	customButtons: {

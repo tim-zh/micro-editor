@@ -16,7 +16,8 @@ microEditor = function(element, buttonContainer, options) {
 	var defaultOptions = {
 		buttonElement: 'button',
 		buttonClassName: 'microEditor-button',
-		buttons: 'bold,italic,underline,strike,size,link,image,quote,list,code,center,paragraph,preview',
+		buttonGroupClassName: 'microEditor-buttonGroup',
+		buttons: 'bold,italic,underline,strike,size|link,image|quote,list,code|center,paragraph|preview',
 		previewReplacements: 'newLine,bold,italic,underline,strike,size,link,link2,image,image2,quote,list,code,center,paragraph'
 	};
 	var defaultButtons = {
@@ -57,7 +58,7 @@ microEditor = function(element, buttonContainer, options) {
 		italic: [/\[i\]([\s\S]+?)\[\/i\]/g, '<i>$1</i>'],
 		underline: [/\[u\]([\s\S]+?)\[\/u\]/g, '<u>$1</u>'],
 		strike: [/\[s\]([\s\S]+?)\[\/s\]/g, '<s>$1</s>'],
-		size: [/\[size=(\d+?)\]([\s\S]+?)\[\/size\]/g, '<font size=$1>$2</font>'],
+		size: [/\[size=(\d+?)\]([\s\S]+?)\[\/size\]/g, '<span size=$1>$2</span>'],
 		link: [/\[url\](\S+?)\[\/url\]/g, '<a href="$1">$1</a>'],
 		link2: [/\[url=(\S+?)\]([\s\S]+?)\[\/url\]/g, '<a href="$1">$2</a>'],
 		image: [/\[img\](\S+?)\[\/img\]/g, '<img src="$1"/>'],
@@ -75,7 +76,7 @@ microEditor = function(element, buttonContainer, options) {
 			if (defaultOptions.hasOwnProperty(f))
 				defaultOptions[f] = options[f] || defaultOptions[f];
 
-	var addButton = function(id, title, startString, endString, classNames, handler) {
+	var addButton = function(container, id, title, startString, endString, classNames, handler) {
 		var btn = document.createElement(defaultOptions.buttonElement);
 		btn.setAttribute('class', defaultOptions.buttonClassName + classNames);
 		btn.innerHTML = title;
@@ -94,49 +95,52 @@ microEditor = function(element, buttonContainer, options) {
 			element.setSelectionRange(caretStart + (startString ? startString.length : 0),
 				caretEnd + (startString ? startString.length : 0));
 		});
-		buttonContainer.appendChild(btn);
+		container.appendChild(btn);
 	};
 
-	defaultOptions.buttons.split(',').forEach(function (btn) {
-		if (defaultButtons[btn])
-			addButton('microEditor' + btn, defaultButtons[btn][0], defaultButtons[btn][1], defaultButtons[btn][2], '',
-				defaultButtons[btn][3]);
-		else if (options.customButtons[btn]) {
-			var b = options.customButtons[btn];
-			addButton('microEditor' + btn, b[0], b[1], b[2], b[3], b[4]);
-		}
-	});
+	defaultOptions.buttons.split('|').filter(function(group) {return !!group}).forEach(function(group) {
+		var panel = document.createElement('span');
+		panel.setAttribute('class', defaultOptions.buttonGroupClassName);
+		buttonContainer.appendChild(panel);
+		group.split(',').forEach(function (btn) {
+			if (defaultButtons[btn])
+				addButton(panel, 'microEditor' + btn, defaultButtons[btn][0], defaultButtons[btn][1], defaultButtons[btn][2], '',
+					defaultButtons[btn][3]);
+			else if (options.customButtons[btn]) {
+				var b = options.customButtons[btn];
+				addButton(panel, 'microEditor' + btn, b[0], b[1], b[2], b[3], b[4]);
+			} else if (btn === 'preview') {
+				var button = document.createElement(defaultOptions.buttonElement);
+				button.setAttribute('class', defaultOptions.buttonClassName);
+				button.innerHTML = 'preview';
 
-	if (defaultOptions.buttons.indexOf('preview') >= 0) {
-		var btn = document.createElement(defaultOptions.buttonElement);
-		btn.setAttribute('class', defaultOptions.buttonClassName);
-		btn.innerHTML = 'preview';
-
-		var previewContainer = document.createElement('div');
-		previewContainer.style.display = 'none';
-		previewContainer.style.width = element.offsetWidth + 'px';
-		previewContainer.style.height = element.offsetHeight + 'px';
-		element.parentNode.appendChild(previewContainer);
-		var isPreview = false;
-		var elementDisplay = element.style.display;
-		btn.addEventListener('click', function(event) {
-			event.preventDefault();
-			isPreview = !isPreview;
-			if (isPreview) {
-				var text = element.value;
-				defaultOptions.previewReplacements.split(',').filter(function(e) {return previewReplacements[e]}).
-					forEach(function(rule) {text = text.replace(previewReplacements[rule][0], previewReplacements[rule][1])});
-				if (options.customReplacements)
-					options.customReplacements.forEach(function(rule) {
-						text = text.replace(rule[0], rule[1])});
-				previewContainer.innerHTML = text;
-				if (options.onPreview)
-					options.onPreview(previewContainer);
+				var previewContainer = document.createElement('div');
+				previewContainer.style.display = 'none';
+				previewContainer.style.width = element.offsetWidth + 'px';
+				previewContainer.style.height = element.offsetHeight + 'px';
+				element.parentNode.appendChild(previewContainer);
+				var isPreview = false;
+				var elementDisplay = element.style.display;
+				button.addEventListener('click', function(event) {
+					event.preventDefault();
+					isPreview = !isPreview;
+					if (isPreview) {
+						var text = element.value;
+						defaultOptions.previewReplacements.split(',').filter(function(e) {return previewReplacements[e]}).
+							forEach(function(rule) {text = text.replace(previewReplacements[rule][0], previewReplacements[rule][1])});
+						if (options.customReplacements)
+							options.customReplacements.forEach(function(rule) {
+								text = text.replace(rule[0], rule[1])});
+						previewContainer.innerHTML = text;
+						if (options.onPreview)
+							options.onPreview(previewContainer);
+					}
+					element.style.display = isPreview ? 'none' : elementDisplay;
+					previewContainer.style.display = isPreview ? 'block' : 'none';
+					button.innerHTML = isPreview ? 'source' : 'preview';
+				});
+				panel.appendChild(button);
 			}
-			element.style.display = isPreview ? 'none' : elementDisplay;
-			previewContainer.style.display = isPreview ? 'block' : 'none';
-			btn.innerHTML = isPreview ? 'source' : 'preview';
 		});
-		buttonContainer.appendChild(btn);
-	}
+	});
 };
