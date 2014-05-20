@@ -51,7 +51,10 @@ microEditor = function(element, buttonContainer, options) {
 		code: ['code', '[code]', '[/code]'],
 		center: ['center', '[center]', '[/center]'],
 		paragraph: ['¶', '[p]', '[/p]'],
-		preview: ['preview', '', '', function(text, selectionStart, selectionEnd) {element.togglePreview()}]
+		preview: ['preview', '', '', function(text, selectionStart, selectionEnd) {
+			element.togglePreview.call(this);
+			return text;
+		}]
 	};
 	var previewReplacements = {
 		newLine: [/(\r\n|\r|\n|\n\r)/g, '<br/>'],
@@ -86,7 +89,7 @@ microEditor = function(element, buttonContainer, options) {
 			var caretStart = element.selectionStart;
 			var caretEnd = element.selectionEnd;
 			if (handler) {
-				element.value = handler(element.value, caretStart, caretEnd);
+				element.value = handler.call(btn, element.value, caretStart, caretEnd);
 				caretEnd = caretStart;
 			} else {
 				element.value = insertInString(element.value, startString, caretStart);
@@ -99,6 +102,11 @@ microEditor = function(element, buttonContainer, options) {
 		container.appendChild(btn);
 	};
 
+	var previewContainer = document.createElement('div');
+	previewContainer.style.display = 'none';
+	previewContainer.style.width = element.offsetWidth + 'px';
+	previewContainer.style.height = element.offsetHeight + 'px';
+	element.parentNode.appendChild(previewContainer);
 	var isPreview = false;
 	var elementDisplay = element.style.display;
 	element.togglePreview = function() {
@@ -115,7 +123,7 @@ microEditor = function(element, buttonContainer, options) {
 		}
 		element.style.display = isPreview ? 'none' : elementDisplay;
 		previewContainer.style.display = isPreview ? 'block' : 'none';
-		button.innerHTML = isPreview ? 'source' : 'preview';
+		this.innerHTML = isPreview ? 'source' : 'preview';
 	};
 
 	defaultOptions.buttons.split('|').filter(function(group) {return !!group}).forEach(function(group) {
