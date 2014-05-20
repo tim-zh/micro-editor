@@ -26,7 +26,7 @@ microEditor(document.getElementById('textHere'), document.getElementById('button
 
 	//list of button (provided and custom) names appended to buttonContainer.
 	// | sign splits buttons into groups.
-	//provided buttons use bbCode
+	//provided buttons use bbCode. preview button uses togglePreview() method added to text container
 	buttons: 'bold,italic,underline,strike,size|link,image|quote,list,code|center,paragraph|preview' +
 		//custom buttons, see below
 		',hello1,hello2',

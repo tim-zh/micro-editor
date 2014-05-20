@@ -50,7 +50,8 @@ microEditor = function(element, buttonContainer, options) {
 		list: ['list', '[ol][li]', '[/li][/ol]'],
 		code: ['code', '[code]', '[/code]'],
 		center: ['center', '[center]', '[/center]'],
-		paragraph: ['¶', '[p]', '[/p]']
+		paragraph: ['¶', '[p]', '[/p]'],
+		preview: ['preview', '', '', function(text, selectionStart, selectionEnd) {element.togglePreview()}]
 	};
 	var previewReplacements = {
 		newLine: [/(\r\n|\r|\n|\n\r)/g, '<br/>'],
@@ -98,6 +99,25 @@ microEditor = function(element, buttonContainer, options) {
 		container.appendChild(btn);
 	};
 
+	var isPreview = false;
+	var elementDisplay = element.style.display;
+	element.togglePreview = function() {
+		isPreview = !isPreview;
+		if (isPreview) {
+			var text = element.value;
+			defaultOptions.previewReplacements.split(',').filter(function(e) {return previewReplacements[e]}).
+				forEach(function(rule) {text = text.replace(previewReplacements[rule][0], previewReplacements[rule][1])});
+			if (options.customReplacements)
+				options.customReplacements.forEach(function(rule) {text = text.replace(rule[0], rule[1])});
+			previewContainer.innerHTML = text;
+			if (options.onPreview)
+				options.onPreview(previewContainer);
+		}
+		element.style.display = isPreview ? 'none' : elementDisplay;
+		previewContainer.style.display = isPreview ? 'block' : 'none';
+		button.innerHTML = isPreview ? 'source' : 'preview';
+	};
+
 	defaultOptions.buttons.split('|').filter(function(group) {return !!group}).forEach(function(group) {
 		var panel = document.createElement('span');
 		panel.setAttribute('class', defaultOptions.buttonGroupClassName);
@@ -109,37 +129,6 @@ microEditor = function(element, buttonContainer, options) {
 			else if (options.customButtons[btn]) {
 				var b = options.customButtons[btn];
 				addButton(panel, 'microEditor' + btn, b[0], b[1], b[2], b[3], b[4]);
-			} else if (btn === 'preview') {
-				var button = document.createElement(defaultOptions.buttonElement);
-				button.setAttribute('class', defaultOptions.buttonClassName);
-				button.innerHTML = 'preview';
-
-				var previewContainer = document.createElement('div');
-				previewContainer.style.display = 'none';
-				previewContainer.style.width = element.offsetWidth + 'px';
-				previewContainer.style.height = element.offsetHeight + 'px';
-				element.parentNode.appendChild(previewContainer);
-				var isPreview = false;
-				var elementDisplay = element.style.display;
-				button.addEventListener('click', function(event) {
-					event.preventDefault();
-					isPreview = !isPreview;
-					if (isPreview) {
-						var text = element.value;
-						defaultOptions.previewReplacements.split(',').filter(function(e) {return previewReplacements[e]}).
-							forEach(function(rule) {text = text.replace(previewReplacements[rule][0], previewReplacements[rule][1])});
-						if (options.customReplacements)
-							options.customReplacements.forEach(function(rule) {
-								text = text.replace(rule[0], rule[1])});
-						previewContainer.innerHTML = text;
-						if (options.onPreview)
-							options.onPreview(previewContainer);
-					}
-					element.style.display = isPreview ? 'none' : elementDisplay;
-					previewContainer.style.display = isPreview ? 'block' : 'none';
-					button.innerHTML = isPreview ? 'source' : 'preview';
-				});
-				panel.appendChild(button);
 			}
 		});
 	});
