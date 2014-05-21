@@ -104,6 +104,7 @@ microEditor = function(element, buttonContainer, options) {
 
 	var previewContainer = document.createElement('div');
 	previewContainer.style.display = 'none';
+	previewContainer.style.overflow = 'auto';
 	previewContainer.style.width = element.offsetWidth + 'px';
 	previewContainer.style.height = element.offsetHeight + 'px';
 	element.parentNode.appendChild(previewContainer);
