@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Micro-editor by tim-zh</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Micro-editor</h1>
+        <h2>really lightweight javascript text editor (no 3rd party frameworks needed)</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/tim-zh/micro-editor/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/tim-zh/micro-editor/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/tim-zh/micro-editor" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a name="micro-editor" class="anchor" href="#micro-editor"><span class="octicon octicon-link"></span></a>micro-editor</h1>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>usage</h2>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"javascripts/micro-editor.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+...
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"buttonsContainer"</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;textarea</span> <span class="na">id=</span><span class="s">"textHere"</span><span class="nt">&gt;&lt;/textarea&gt;</span>
+</pre></div>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">microEditor</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'textHere'</span><span class="p">),</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'buttonsContainer'</span><span class="p">));</span>
+</pre></div>
+
+<p>or with options</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">microEditor</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'textHere'</span><span class="p">),</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'buttonsContainer'</span><span class="p">),</span> <span class="p">{</span>
+    <span class="c1">//tag that will be used to create buttons</span>
+    <span class="nx">buttonElement</span><span class="o">:</span> <span class="s1">'button'</span><span class="p">,</span>
+
+    <span class="c1">//default classes for buttons</span>
+    <span class="nx">buttonClassName</span><span class="o">:</span> <span class="s1">'microEditor-button'</span><span class="p">,</span>
+
+    <span class="c1">//default classes for button groups</span>
+    <span class="nx">buttonGroupClassName</span><span class="o">:</span> <span class="s1">'microEditor-buttonGroup'</span><span class="p">,</span>
+
+    <span class="c1">//list of button (provided and custom) names appended to buttonContainer.</span>
+    <span class="c1">// | sign splits buttons into groups.</span>
+    <span class="c1">//provided buttons use bbCode. preview button uses togglePreview() method added to text container</span>
+    <span class="nx">buttons</span><span class="o">:</span> <span class="s1">'bold,italic,underline,strike,size|link,image|quote,list,code|center,paragraph|preview'</span> <span class="o">+</span>
+        <span class="c1">//custom buttons, see below</span>
+        <span class="s1">',hello1,hello2'</span><span class="p">,</span>
+
+    <span class="c1">//list of rule names that convert text to html to see in preview</span>
+    <span class="nx">previewReplacements</span><span class="o">:</span> <span class="s1">'newLine,bold,italic,underline,strike,size,link,link2,image,image2,quote,'</span> <span class="o">+</span>
+        <span class="s1">'list,code,center,paragraph'</span><span class="p">,</span>
+
+    <span class="c1">//custom buttons</span>
+    <span class="nx">customButtons</span><span class="o">:</span> <span class="p">{</span>
+        <span class="c1">//button title string, startTag string, endTag string, class names string</span>
+        <span class="c1">//this one when clicked wraps selected text in [h2]..[/h2]</span>
+        <span class="nx">hello1</span><span class="o">:</span> <span class="p">[</span><span class="s1">'hi'</span><span class="p">,</span> <span class="s1">'[h2]'</span><span class="p">,</span> <span class="s1">'[/h2]'</span><span class="p">,</span> <span class="s1">'btn-default'</span><span class="p">],</span>
+
+        <span class="c1">//the fourth is a special onclick handler</span>
+        <span class="nx">hello2</span><span class="o">:</span> <span class="p">[</span><span class="s1">'hey'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'btn-primary'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">selectionStart</span><span class="p">,</span> <span class="nx">selectionEnd</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">prompt</span><span class="p">(</span><span class="s1">'type a name'</span><span class="p">);</span>
+            <span class="c1">//insertInString is the second method, shipped with microEditor()</span>
+            <span class="k">return</span> <span class="s1">'hey, '</span> <span class="o">+</span> <span class="nx">insertInString</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="s1">'regards, '</span> <span class="o">+</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">selectionEnd</span><span class="p">);</span>
+        <span class="p">}]</span>
+    <span class="p">},</span>
+
+    <span class="c1">//additional rules to previewReplacements</span>
+    <span class="nx">customReplacements</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">[</span><span class="sr">/\[h2\]([\s\S]+?)\[\/h2\]/g</span><span class="p">,</span> <span class="s1">'&lt;h2&gt;$1&lt;/h2&gt;'</span><span class="p">]</span>
+    <span class="p">],</span>
+
+    <span class="c1">//function, called after preview was shown</span>
+    <span class="nx">onPreview</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">previewContainer</span><span class="p">)</span> <span class="p">{</span><span class="nx">previewContainer</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">background</span> <span class="o">=</span> <span class="s1">'#aff'</span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
