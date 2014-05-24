@@ -1,18 +1,57 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print"/>
+
+    <style>
+        .panel {
+            border: 1px solid #DDDDDD;
+            border-radius: 4px;
+            margin: 0 0 20px;
+            width: 900px;
+        }
+
+        .panel-heading {
+            background: #F5F5F5 linear-gradient(to bottom, #F5F5F5 0px, #E8E8E8 100%) repeat-x;
+            border: 0 #DDDDDD;
+            border-bottom: 1px solid #DDDDDD;
+            border-radius: 3px 3px 0 0;
+            box-sizing: border-box;
+            font: normal normal 500 14px/15.4px Arial;
+            padding: 10px 15px;
+            width: 900px;
+        }
+
+        .microEditor-buttonGroup {
+            padding-right: 8px;
+        }
+
+        .microEditor-button {
+            margin-right: 4px;
+        }
+
+        textarea {
+            border: 0 solid #CCCCCC;
+            box-sizing: border-box;
+            color: #555555;
+            font: normal normal 500 14px/20.02px Arial;
+            overflow-wrap: break-word;
+            padding: 6px 12px;
+            width: 900px;
+            word-wrap: break-word;
+        }
+    </style>
+
+    <script src="javascripts/micro-editor.js"></script>
 
     <title>Micro-editor by tim-zh</title>
-  </head>
-
-  <body>
-
+</head>
+<body>
     <header>
       <div class="container">
         <h1>Micro-editor</h1>
@@ -28,11 +67,19 @@
 
     <div class="container">
       <section id="main_content">
-        <h1>
-<a name="micro-editor" class="anchor" href="#micro-editor"><span class="octicon octicon-link"></span></a>micro-editor</h1>
+<h2><a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>example</h2>
 
-<h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>usage</h2>
+
+<div class="panel">
+    <div class="panel-heading" id="buttonsContainer"></div>
+    <textarea id="content" rows="10"></textarea>
+</div>
+<script>
+    microEditor(document.getElementById('content'), document.getElementById('buttonsContainer'));
+</script>
+
+
+<h2><a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>usage</h2>
 
 <div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"javascripts/micro-editor.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 ...
@@ -92,6 +139,5 @@
       </section>
     </div>
 
-    
-  </body>
+</body>
 </html>
